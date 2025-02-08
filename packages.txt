@@ -1,5 +1,3 @@
 libasound2-dev
 iputils-ping
-linux-sound-base 
-alsa-base
 alsa-utils
