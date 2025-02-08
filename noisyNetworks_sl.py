@@ -34,7 +34,7 @@ st.markdown(
 
 # arguments
 destination = st.text_input("destination DNS or IP")
-length = st.slider("Length of song",value=5, min_value=0, max_value=14)
+length = st.slider("Length of song",value=5, min_value=1, max_value=14)
 
 
 # maybe add loading bar
@@ -49,7 +49,7 @@ def run_ping(destination, count):
     """
     try:
         result = subprocess.run(
-                ["ping", "-c", str(count), destination],
+                ["ping", "-c", str(count+ 1), destination],
             text=True,
             capture_output=True,
             check=True
@@ -58,6 +58,8 @@ def run_ping(destination, count):
 
         times = re.findall(r"time=([\d.]+)\s*ms", result.stdout)
         times = [float(t) for t in times]
+
+        times.pop(0)
 
         return times
     except subprocess.CalledProcessError as e:
