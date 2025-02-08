@@ -4,8 +4,6 @@ import subprocess
 import re
 from pydub import AudioSegment
 from pydub.generators import Sine
-from pydub.playback import play
-import numpy as np
 import io
 
 
