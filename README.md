@@ -2,8 +2,9 @@
 
 Creator: Rin Takahashi
 
-## purpose
+## Purpose
 A cute web app where cats ping websites and sing!
+Something Fun!
 
 ## Tools utilized
 - Streamlit
