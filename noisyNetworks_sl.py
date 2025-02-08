@@ -2,8 +2,10 @@ import streamlit as st
 
 import subprocess
 import re
+from pydub import AudioSegment
+from pydub.generators import Sine
+from pydub.playback import play
 import numpy as np
-import simpleaudio as sa
 
 
 # Initialize session state variables
@@ -92,23 +94,18 @@ def build_song(times):
     return song
 
 
-
 def play_song(song, notes):
-    
+
     for i in range(len(song)):
-            
+
         frequency = notes[song[i]]
-        duration = 1
-        sample_rate = 44100
-
-        t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
-        sine_wave = 0.5 * np.sin(2 * np.pi * frequency * t)
-
-        # convert to 16-bit PCM
-        audio_data = (sine_wave * 32767).astype(np.int16)
-
-        play_object = sa.play_buffer(audio_data, 1, 2, sample_rate)
-        play_object.wait_done()
+        duration = 1000  # Duration in milliseconds (1 second)
+        
+        # Generate a sine wave using pydub
+        sine_wave = Sine(frequency).to_audio_segment(duration=duration)
+        
+        # Play the audio
+        play(sine_wave)
 
 
 def print_song(song):

@@ -1,4 +1,3 @@
 libasound2-dev
 iputils-ping
-alsa-utils
-snd-dummy
+ffmpeg
