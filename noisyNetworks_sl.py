@@ -6,6 +6,7 @@ from pydub import AudioSegment
 from pydub.generators import Sine
 from pydub.playback import play
 import numpy as np
+import io
 
 
 # Initialize session state variables
@@ -94,19 +95,27 @@ def build_song(times):
     return song
 
 
+def generate_audio(frequency, duration):
+    """Generate a sine wave using pydub and return it as an AudioSegment."""
+    sine_wave = Sine(frequency).to_audio_segment(duration=duration)
+    return sine_wave
+
 def play_song(song, notes):
+    duration = 1000
+    full_audio = AudioSegment.silent(duration=0)
 
     for i in range(len(song)):
-
         frequency = notes[song[i]]
-        duration = 1000  # Duration in milliseconds (1 second)
-        
-        # Generate a sine wave using pydub
-        sine_wave = Sine(frequency).to_audio_segment(duration=duration)
-        
-        # Play the audio
-        play(sine_wave)
+        note_audio = generate_audio(frequency, duration)
+        full_audio += note_audio
 
+    # Export to WAV
+    audio_bytes = io.BytesIO()
+    full_audio.export(audio_bytes, format="wav")
+    audio_bytes.seek(0)
+
+    # Stream the audio to the browser
+    st.audio(audio_bytes, format="audio/wav")
 
 def print_song(song):
     s = '&nbsp;'
@@ -224,18 +233,8 @@ if run_pressed:
         st.session_state.times = run_ping(destination, length)
     
     st.session_state.song = build_song(st.session_state.times)
-    st.session_state.play_song_triggered = True
 
 if st.session_state.run_pressed:
     print_song(st.session_state.song)
     print_cat()
-
-    if st.session_state.play_song_triggered:
-        play_song(st.session_state.song, notes)
-        st.session_state.play_song_triggered = False
-
-    replay = st.button("replay")
-
-    if replay:
-        st.session_state.play_song_triggered = True
-        st.rerun()
+    play_song(st.session_state.song, notes)
