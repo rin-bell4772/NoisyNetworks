@@ -1,0 +1,5 @@
+streamlit
+subprocess
+re
+numpy
+simpleaudio
